@@ -4,9 +4,11 @@ namespace Tests\Feature\Http\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Book;
+use App\Notifications\BookCreated;
 
 class BookControllerTest extends TestCase
 {
@@ -36,7 +38,12 @@ class BookControllerTest extends TestCase
 
     public function test_users_can_create_books()
     {
+        // show the actual error
         $this->withoutExceptionHandling();
+
+        // fake notification
+        Notification::fake();
+
         // we want to create a user
         $user = User::factory()->create();
 
@@ -64,5 +71,8 @@ class BookControllerTest extends TestCase
         $this->assertEquals(0, $book->copies_sold);
         $this->assertEquals($user->id, $book->user->id);
         $this->assertInstanceOf( User::class, $book->user);
+
+        // check if notification was sent(not if the notification works!)
+        Notification::assertSentTo( $user, BookCreated::class);
     }
 }

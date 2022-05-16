@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+Use App\Notifications\BookCreated;
 
 class BookController extends Controller
 {
@@ -40,6 +41,9 @@ class BookController extends Controller
             'price' => $request->price,
             'copies_sold' => 0
         ]);
+
+        auth()->user()->notify(new BookCreated);
+
         return redirect('/books');
     }
 

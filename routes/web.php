@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookSalesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,4 +32,7 @@ Route::middleware([
 
 Route::middleware(['auth:sanctum'])->group( function() {
     Route::resource('books', BookController::class);
+    Route::post('books/{book}/sales', [BookSalesController::class, 'store']);
 });
+
+
